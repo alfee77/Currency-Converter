@@ -15,8 +15,9 @@ const conversionResult = document.querySelector("#conversion-result");
 const getConversionRates = () => {
   console.log(baseCurrency.value);
   conversionAPI.get(`/latest/${baseCurrency.value}`).then((data) => {
-    conversionResult.textContent =
-      data.conversion_rates[targetCurrency.value] * baseCurrencyInput.value;
+    conversionResult.textContent = (
+      data.conversion_rates[targetCurrency.value] * baseCurrencyInput.value
+    ).toFixed(2);
   });
 };
 
