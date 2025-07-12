@@ -8,13 +8,15 @@ const conversionAPI = new FetchWrapper(
 );
 
 const baseCurrency = document.querySelector("#base-currency");
+const baseCurrencyInput = document.querySelector("#base-currency-input");
 const targetCurrency = document.querySelector("#target-currency");
 const conversionResult = document.querySelector("#conversion-result");
 
 const getConversionRates = () => {
   console.log(baseCurrency.value);
   conversionAPI.get(`/latest/${baseCurrency.value}`).then((data) => {
-    conversionResult.textContent = data.conversion_rates[targetCurrency.value];
+    conversionResult.textContent =
+      data.conversion_rates[targetCurrency.value] * baseCurrencyInput.value;
   });
 };
 
@@ -36,14 +38,14 @@ conversionAPI.get(`/codes`).then((data) => {
     targetCurrency.innerHTML;
 });
 
-console.log("POO" + baseCurrency.value);
-
-//getConversionRates();
-
 baseCurrency.addEventListener("change", (event) => {
   getConversionRates();
 });
 
 targetCurrency.addEventListener("change", (event) => {
+  getConversionRates();
+});
+
+baseCurrencyInput.addEventListener("keyup", (event) => {
   getConversionRates();
 });
