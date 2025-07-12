@@ -2,28 +2,48 @@
 import FetchWrapper from "./fetch-wrapper.js";
 
 const APIKey = "378b351748bb91e95ce6dc4e";
-const exampleRequest =
-  "https://v6.exchangerate-api.com/v6/378b351748bb91e95ce6dc4e/latest/USD";
-const conversionAPI = new FetchWrapper(`https://v6.exchangerate-api.com/v6/`);
+
+const conversionAPI = new FetchWrapper(
+  `https://v6.exchangerate-api.com/v6/${APIKey}`
+);
+
 const baseCurrency = document.querySelector("#base-currency");
 const targetCurrency = document.querySelector("#target-currency");
 const conversionResult = document.querySelector("#conversion-result");
 
-console.log(baseCurrency.toString());
-console.log(conversionResult.toString());
+const getConversionRates = () => {
+  console.log(baseCurrency.value);
+  conversionAPI.get(`/latest/${baseCurrency.value}`).then((data) => {
+    conversionResult.textContent = data.conversion_rates[targetCurrency.value];
+  });
+};
+
+baseCurrency.innerHTML = ``;
+targetCurrency.innerHTML = ``;
+
+conversionAPI.get(`/codes`).then((data) => {
+  data.supported_codes.forEach((code) => {
+    //console.log(code);
+    if (code[0] === "GBP") {
+      baseCurrency.innerHTML += `<option value="${code[0]}" selected>${code[0]}: ${code[1]}</option>`;
+    } else {
+      baseCurrency.innerHTML += `<option value="${code[0]}">${code[0]}: ${code[1]}</option>`;
+    }
+    targetCurrency.innerHTML += `<option value="${code[0]}">${code[0]}: ${code[1]}</option>`;
+  });
+  targetCurrency.innerHTML =
+    `<option value=""> -->Please select a target currency<-- </option>` +
+    targetCurrency.innerHTML;
+});
+
+console.log("POO" + baseCurrency.value);
+
+//getConversionRates();
 
 baseCurrency.addEventListener("change", (event) => {
-  conversionAPI
-    .get(`${APIKey}/pair/${baseCurrency.value}/${targetCurrency.value}`)
-    .then((data) => {
-      conversionResult.innerHTML = data.conversion_rate;
-    });
+  getConversionRates();
 });
 
 targetCurrency.addEventListener("change", (event) => {
-  conversionAPI
-    .get(`${APIKey}/pair/${baseCurrency.value}/${targetCurrency.value}`)
-    .then((data) => {
-      conversionResult.innerHTML = data.conversion_rate;
-    });
+  getConversionRates();
 });
