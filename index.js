@@ -50,3 +50,7 @@ targetCurrency.addEventListener("change", (event) => {
 baseCurrencyInput.addEventListener("keyup", (event) => {
   getConversionRates();
 });
+
+baseCurrencyInput.addEventListener("keyup", (event) => {
+  getConversionRates();
+});
